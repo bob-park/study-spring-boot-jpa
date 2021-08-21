@@ -18,7 +18,7 @@ public class Order {
   @JoinColumn(name = "member_id")
   private Member member;
 
-  @OneToMany(mappedBy = "order")
+  @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
   private List<OrderItem> orderItems = new ArrayList<>();
 
   @OneToOne(fetch = FetchType.LAZY)
@@ -34,53 +34,47 @@ public class Order {
     return id;
   }
 
-  public Order setId(Long id) {
+  public void setId(Long id) {
     this.id = id;
-    return this;
   }
 
   public Member getMember() {
     return member;
   }
 
-  public Order setMember(Member member) {
+  public void setMember(Member member) {
     this.member = member;
-    return this;
   }
 
   public List<OrderItem> getOrderItems() {
     return orderItems;
   }
 
-  public Order setOrderItems(List<OrderItem> orderItems) {
+  public void setOrderItems(List<OrderItem> orderItems) {
     this.orderItems = orderItems;
-    return this;
   }
 
   public Delivery getDelivery() {
     return delivery;
   }
 
-  public Order setDelivery(Delivery delivery) {
+  public void setDelivery(Delivery delivery) {
     this.delivery = delivery;
-    return this;
   }
 
   public LocalDateTime getOrderDate() {
     return orderDate;
   }
 
-  public Order setOrderDate(LocalDateTime orderDate) {
+  public void setOrderDate(LocalDateTime orderDate) {
     this.orderDate = orderDate;
-    return this;
   }
 
   public OrderStatus getStatus() {
     return status;
   }
 
-  public Order setStatus(OrderStatus status) {
+  public void setStatus(OrderStatus status) {
     this.status = status;
-    return this;
   }
 }
