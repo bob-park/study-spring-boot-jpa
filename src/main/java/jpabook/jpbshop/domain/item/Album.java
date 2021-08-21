@@ -14,17 +14,15 @@ public class Album extends Item {
     return artist;
   }
 
-  public Album setArtist(String artist) {
+  public void setArtist(String artist) {
     this.artist = artist;
-    return this;
   }
 
   public String getEtc() {
     return etc;
   }
 
-  public Album setEtc(String etc) {
+  public void setEtc(String etc) {
     this.etc = etc;
-    return this;
   }
 }

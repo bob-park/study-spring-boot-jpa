@@ -28,44 +28,39 @@ public class OrderItem {
     return id;
   }
 
-  public OrderItem setId(Long id) {
+  public void setId(Long id) {
     this.id = id;
-    return this;
   }
 
   public Item getItem() {
     return item;
   }
 
-  public OrderItem setItem(Item item) {
+  public void setItem(Item item) {
     this.item = item;
-    return this;
   }
 
   public Order getOrder() {
     return order;
   }
 
-  public OrderItem setOrder(Order order) {
+  public void setOrder(Order order) {
     this.order = order;
-    return this;
   }
 
   public int getOrderPrice() {
     return orderPrice;
   }
 
-  public OrderItem setOrderPrice(int orderPrice) {
+  public void setOrderPrice(int orderPrice) {
     this.orderPrice = orderPrice;
-    return this;
   }
 
   public int getCount() {
     return count;
   }
 
-  public OrderItem setCount(int count) {
+  public void setCount(int count) {
     this.count = count;
-    return this;
   }
 }

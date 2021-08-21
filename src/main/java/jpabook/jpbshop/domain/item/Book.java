@@ -14,17 +14,15 @@ public class Book extends Item {
     return author;
   }
 
-  public Book setAuthor(String author) {
+  public void setAuthor(String author) {
     this.author = author;
-    return this;
   }
 
   public String getIsbn() {
     return isbn;
   }
 
-  public Book setIsbn(String isbn) {
+  public void setIsbn(String isbn) {
     this.isbn = isbn;
-    return this;
   }
 }

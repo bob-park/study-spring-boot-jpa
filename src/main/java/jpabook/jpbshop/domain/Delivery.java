@@ -5,53 +5,48 @@ import javax.persistence.*;
 @Entity
 public class Delivery {
 
-    @Id
-    @GeneratedValue
-    @Column(name="delivery_id")
-    private Long id;
+  @Id
+  @GeneratedValue
+  @Column(name = "delivery_id")
+  private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "delivery")
-    private Order order;
+  @OneToOne(fetch = FetchType.LAZY, mappedBy = "delivery")
+  private Order order;
 
-    @Embedded
-    private Address address;
+  @Embedded private Address address;
 
-    @Enumerated(EnumType.STRING)
-    private DeliveryStatus status;
+  @Enumerated(EnumType.STRING)
+  private DeliveryStatus status;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public Delivery setId(Long id) {
-        this.id = id;
-        return this;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public Order getOrder() {
-        return order;
-    }
+  public Order getOrder() {
+    return order;
+  }
 
-    public Delivery setOrder(Order order) {
-        this.order = order;
-        return this;
-    }
+  public void setOrder(Order order) {
+    this.order = order;
+  }
 
-    public Address getAddress() {
-        return address;
-    }
+  public Address getAddress() {
+    return address;
+  }
 
-    public Delivery setAddress(Address address) {
-        this.address = address;
-        return this;
-    }
+  public void setAddress(Address address) {
+    this.address = address;
+  }
 
-    public DeliveryStatus getStatus() {
-        return status;
-    }
+  public DeliveryStatus getStatus() {
+    return status;
+  }
 
-    public Delivery setStatus(DeliveryStatus status) {
-        this.status = status;
-        return this;
-    }
+  public void setStatus(DeliveryStatus status) {
+    this.status = status;
+  }
 }

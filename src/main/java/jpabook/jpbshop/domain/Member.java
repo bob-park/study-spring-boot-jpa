@@ -31,27 +31,24 @@ public class Member {
     return id;
   }
 
-  public Member setId(Long id) {
+  public void setId(Long id) {
     this.id = id;
-    return this;
   }
 
   public String getName() {
     return name;
   }
 
-  public Member setName(String name) {
+  public void setName(String name) {
     this.name = name;
-    return this;
   }
 
   public Address getAddress() {
     return address;
   }
 
-  public Member setAddress(Address address) {
+  public void setAddress(Address address) {
     this.address = address;
-    return this;
   }
 
   public List<Order> getOrders() {

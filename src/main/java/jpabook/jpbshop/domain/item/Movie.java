@@ -14,17 +14,15 @@ public class Movie extends Item {
     return director;
   }
 
-  public Movie setDirector(String director) {
+  public void setDirector(String director) {
     this.director = director;
-    return this;
   }
 
   public String getActor() {
     return actor;
   }
 
-  public Movie setActor(String actor) {
+  public void setActor(String actor) {
     this.actor = actor;
-    return this;
   }
 }

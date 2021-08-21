@@ -27,35 +27,39 @@ public abstract class Item {
     return id;
   }
 
-  public Item setId(Long id) {
+  public void setId(Long id) {
     this.id = id;
-    return this;
   }
 
   public String getName() {
     return name;
   }
 
-  public Item setName(String name) {
+  public void setName(String name) {
     this.name = name;
-    return this;
   }
 
   public int getPrice() {
     return price;
   }
 
-  public Item setPrice(int price) {
+  public void setPrice(int price) {
     this.price = price;
-    return this;
   }
 
   public int getStockQuantity() {
     return stockQuantity;
   }
 
-  public Item setStockQuantity(int stockQuantity) {
+  public void setStockQuantity(int stockQuantity) {
     this.stockQuantity = stockQuantity;
-    return this;
+  }
+
+  public List<Category> getCategories() {
+    return categories;
+  }
+
+  public void setCategories(List<Category> categories) {
+    this.categories = categories;
   }
 }
