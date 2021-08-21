@@ -42,10 +42,6 @@ public class Order {
     return member;
   }
 
-  public void setMember(Member member) {
-    this.member = member;
-  }
-
   public List<OrderItem> getOrderItems() {
     return orderItems;
   }
@@ -56,10 +52,6 @@ public class Order {
 
   public Delivery getDelivery() {
     return delivery;
-  }
-
-  public void setDelivery(Delivery delivery) {
-    this.delivery = delivery;
   }
 
   public LocalDateTime getOrderDate() {
@@ -76,5 +68,22 @@ public class Order {
 
   public void setStatus(OrderStatus status) {
     this.status = status;
+  }
+
+  // == 연관관계 편의 메소드
+  // * 연관관계 편의 메소드는 연관관계를 control 하는 entity 에서 만드는게 좋음
+  public void setMember(Member member) {
+    this.member = member;
+    member.getOrders().add(this);
+  }
+
+  public void addOrderItem(OrderItem orderItem) {
+    orderItem.setOrder(this);
+    this.orderItems.add(orderItem);
+  }
+
+  public void setDelivery(Delivery delivery) {
+    this.delivery = delivery;
+    delivery.setOrder(this);
   }
 }

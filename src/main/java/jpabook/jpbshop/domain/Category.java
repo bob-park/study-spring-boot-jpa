@@ -69,4 +69,11 @@ public class Category {
   public void setChild(List<Category> child) {
     this.child = child;
   }
+
+  // == 연관관계 편의 메소드
+  public void addChildCategory(Category child) {
+    child.setParent(this);
+
+    this.child.add(child);
+  }
 }

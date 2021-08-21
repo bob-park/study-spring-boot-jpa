@@ -55,13 +55,4 @@ public class Member {
     return orders;
   }
 
-  /**
-   * entity 편의 메소드
-   *
-   * @param order
-   */
-  public void addOrder(Order order) {
-    order.setMember(this);
-    orders.add(order);
-  }
 }
