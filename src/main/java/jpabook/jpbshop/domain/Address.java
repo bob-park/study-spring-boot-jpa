@@ -9,30 +9,35 @@ public class Address {
   private String street;
   private String zipcode;
 
-  public String getCity() {
-    return city;
+  protected Address() {}
+
+  public Address(String city, String street, String zipcode) {
+    this.city = city;
+    this.street = street;
+    this.zipcode = zipcode;
   }
 
-  public Address setCity(String city) {
-    this.city = city;
-    return this;
+  public String getCity() {
+    return city;
   }
 
   public String getStreet() {
     return street;
   }
 
-  public Address setStreet(String street) {
-    this.street = street;
-    return this;
-  }
-
   public String getZipcode() {
     return zipcode;
   }
 
-  public Address setZipcode(String zipcode) {
+  protected void setCity(String city) {
+    this.city = city;
+  }
+
+  protected void setStreet(String street) {
+    this.street = street;
+  }
+
+  protected void setZipcode(String zipcode) {
     this.zipcode = zipcode;
-    return this;
   }
 }
