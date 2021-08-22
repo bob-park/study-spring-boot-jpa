@@ -4,13 +4,17 @@ import jpabook.jpbshop.domain.Member;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
 public class MemberRepository {
 
-  @PersistenceContext private EntityManager em;
+  private final EntityManager em;
+
+  // * spring boot data jpa 가 entity manager 를 초기화 해준다.
+  public MemberRepository(EntityManager em) {
+    this.em = em;
+  }
 
   public void save(Member member) {
     em.persist(member);
