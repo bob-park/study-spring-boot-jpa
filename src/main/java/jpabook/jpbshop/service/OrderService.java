@@ -1,5 +1,6 @@
 package jpabook.jpbshop.service;
 
+import java.util.List;
 import jpabook.jpbshop.domain.Delivery;
 import jpabook.jpbshop.domain.Member;
 import jpabook.jpbshop.domain.Order;
@@ -8,6 +9,7 @@ import jpabook.jpbshop.domain.item.Item;
 import jpabook.jpbshop.repository.ItemRepository;
 import jpabook.jpbshop.repository.MemberRepository;
 import jpabook.jpbshop.repository.OrderRepository;
+import jpabook.jpbshop.repository.OrderSearch;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,10 +70,11 @@ public class OrderService {
 
   /**
    * 주문 취소
+   *
    * @param orderId
    */
   @Transactional
-  public void cancelOrder(Long orderId){
+  public void cancelOrder(Long orderId) {
 
     // 주문 조회
     Order order = orderRepository.find(orderId);
@@ -79,19 +82,17 @@ public class OrderService {
     // 주문 취소
     // ! 핵심 비지니스 로직이 entity 안에 있는 Design Pattern 을 Domain Model Pattern 이라고 한다.
     order.cancel();
-
   }
 
   /**
    * 검색
    *
-   * TODO 해야함
+   * <p>TODO 해야함
    *
    * @param orderSearch
    * @return
    */
-//  public List<Order> findOrders(OrderSearch orderSearch){
-//    return orderRepository.findAll(orderSearch);
-//  }
-
+  public List<Order> findOrders(OrderSearch orderSearch) {
+    return orderRepository.findAll(orderSearch);
+  }
 }
