@@ -30,6 +30,9 @@ public class Order {
   @Enumerated(EnumType.STRING)
   private OrderStatus status;
 
+  protected Order() {
+  }
+
   public Long getId() {
     return id;
   }

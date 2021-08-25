@@ -64,6 +64,9 @@ public class OrderItem {
     this.count = count;
   }
 
+  protected OrderItem() {
+  }
+
   // == 생성 메서드 ==//
 
   public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
