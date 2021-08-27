@@ -67,11 +67,11 @@ public class ItemController {
   }
 
   @PostMapping("/items/{itemId}/edit")
-  public String updateItem(@PathVariable String itemId, @ModelAttribute BookForm form) {
+  public String updateItem(@PathVariable Long itemId, @ModelAttribute BookForm form) {
 
     Book book = new Book();
 
-    book.setId(form.getId());
+    book.setId(form.getId()); // JPA 가 식별할 수 있는 ID 가 존재하는 경우 - 준영속 상태 객체가 된다.
     book.setName(form.getName());
     book.setPrice(form.getPrice());
     book.setStockQuantity(form.getStockQuantity());
