@@ -32,6 +32,10 @@ public class MemberController {
    * ! BindingResult 를 사용할 경우 Error 를 포함한 Result 가 반환된다.
    *
    * ! 별도의 DTO 를 쓴 이유는 entity 의 validation 과 Controller 의 Validation 이 다를 수 있기 때문
+   * ! entity 는 항상 순수하게 유지해야함
+   *
+   * ! API 로 절대 entity 를 반환하면 안된다.
+   * - API 스펙이 변하면 안되기 때문
    *
    * @param memberForm
    * @param result
@@ -55,5 +59,13 @@ public class MemberController {
     memberService.join(member);
 
     return "redirect:/";
+  }
+
+  @GetMapping("/members")
+  public String list(Model model){
+
+    model.addAttribute("members", memberService.findMembers());
+
+    return "members/memberList";
   }
 }
