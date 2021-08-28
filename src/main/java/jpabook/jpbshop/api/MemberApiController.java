@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class MemberApiController {
@@ -14,6 +16,29 @@ public class MemberApiController {
 
   public MemberApiController(MemberService memberService) {
     this.memberService = memberService;
+  }
+
+  // == v1 == //
+
+  /**
+   * 회원 조회
+   *
+   * <p>! 이렇게 하면 안된다.
+   *
+   * <p>* 문제점
+   *
+   * <pre>
+   * - entity 가 그대로 노출된다. (Spring Framework 는 기본적으로 Jackson 을 사용하기 때무에 @JsonIgnore 를 사용하여 감출 수 있지만, 다른곳에서도 사용하지 못하게 될 수 있다.)
+   * - entity 가 변경되면 API Spec 이 변경된다.
+   * - APC Spec 에 다양할 수록 entity 내부의 로직이 들어갈 수 밖에 없다.
+   * - Data 구조에 확장성이 없다.
+   * </pre>
+   *
+   * @return
+   */
+  @GetMapping(path = "api/v1/members")
+  public List<Member> membersV1() {
+    return memberService.findMembers();
   }
 
   /**
@@ -38,6 +63,30 @@ public class MemberApiController {
     Long memberId = memberService.join(member);
 
     return new CreateMemberResponse(memberId);
+  }
+
+  // == v2 == //
+
+  /**
+   * 회원 조회
+   *
+   * ! 장점
+   *
+   * <pre>
+   *     - API Spec 유지
+   *     - 반환하고 싶은 데이터만 반환 가능
+   *     - entity 가 변경되도 API Spec 유지
+   *     - 유지보수 👍
+   * </pre>
+   *
+   * @return
+   */
+  @GetMapping(path = "api/v2/members")
+  public Result<List<MemberDto>> memberV2() {
+    return new Result<>(
+        memberService.findMembers().stream()
+            .map(findMember -> new MemberDto(findMember.getName()))
+            .collect(Collectors.toList()));
   }
 
   /**
@@ -74,6 +123,30 @@ public class MemberApiController {
     Member findMember = memberService.find(id);
 
     return new UpdateMemberResponse(findMember.getId(), findMember.getName());
+  }
+
+  static class MemberDto {
+    private final String name;
+
+    public MemberDto(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
+  }
+
+  static class Result<T> {
+    private final T data;
+
+    public Result(T data) {
+      this.data = data;
+    }
+
+    public T getData() {
+      return data;
+    }
   }
 
   static class CreateMemberRequest {
