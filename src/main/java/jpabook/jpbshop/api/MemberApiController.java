@@ -2,9 +2,7 @@ package jpabook.jpbshop.api;
 
 import jpabook.jpbshop.domain.Member;
 import jpabook.jpbshop.service.MemberService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -67,6 +65,17 @@ public class MemberApiController {
     return new CreateMemberResponse(memberService.join(member));
   }
 
+  @PutMapping(path = "api/v2/members/{id}")
+  public UpdateMemberResponse updateMemberV2(
+      @PathVariable Long id, @RequestBody @Valid UpdateMemberRequest request) {
+
+    memberService.update(id, request.getName());
+
+    Member findMember = memberService.find(id);
+
+    return new UpdateMemberResponse(findMember.getId(), findMember.getName());
+  }
+
   static class CreateMemberRequest {
 
     @NotNull private String name;
@@ -93,6 +102,46 @@ public class MemberApiController {
 
     public void setId(Long id) {
       this.id = id;
+    }
+  }
+
+  private static class UpdateMemberRequest {
+
+    @NotNull private String name;
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+  }
+
+  private static class UpdateMemberResponse {
+
+    private Long id;
+    private String name;
+
+    public UpdateMemberResponse(Long id, String name) {
+      this.id = id;
+      this.name = name;
+    }
+
+    public Long getId() {
+      return id;
+    }
+
+    public void setId(Long id) {
+      this.id = id;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
     }
   }
 }
