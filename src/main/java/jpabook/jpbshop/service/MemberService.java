@@ -67,4 +67,20 @@ public class MemberService {
       throw new IllegalStateException("이미 존재하는 회원입니다.");
     }
   }
+
+  /**
+   * 회원 수정
+   *
+   * <p>* query 와 command 의 반환 타입을 서로 다르게 해준다. - 개인 스타일이다.
+   *
+   * @param id
+   * @param name
+   */
+  @Transactional
+  public void update(Long id, String name) {
+
+    Member member = memberRepository.find(id);
+
+    member.setName(name);
+  }
 }
