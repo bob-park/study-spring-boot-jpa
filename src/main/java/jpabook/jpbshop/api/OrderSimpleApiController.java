@@ -5,6 +5,7 @@ import jpabook.jpbshop.domain.Order;
 import jpabook.jpbshop.domain.OrderStatus;
 import jpabook.jpbshop.repository.OrderRepository;
 import jpabook.jpbshop.repository.OrderSearch;
+import jpabook.jpbshop.repository.SimpleOrderQueryDto;
 import jpabook.jpbshop.service.OrderService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -78,13 +79,13 @@ public class OrderSimpleApiController {
    * @return
    */
   @GetMapping(path = "api/v2/simple-orders")
-  public List<SimpleOrderDto> ordersV2() {
+  public List<SimpleOrderQueryDto> ordersV2() {
 
     // N + 1 문제 발생
     // Order 조회로 1번 (2 row) -> Member, Delivery 각각 Order 의 result row 개수 만큼 추가 - 총 1 + (2 + 2)번 실행
     // Lazy 에서 Eager 로 변경하면, SQL Query 가 어떻게 실행될 지 예상되지 않음
     return orderRepository.findAll(new OrderSearch()).stream()
-        .map(SimpleOrderDto::new)
+        .map(SimpleOrderQueryDto::new)
         .collect(Collectors.toList());
   }
 
@@ -102,46 +103,37 @@ public class OrderSimpleApiController {
    * @return
    */
   @GetMapping(path = "api/v3/simple-orders")
-  public List<SimpleOrderDto> ordersV3() {
+  public List<SimpleOrderQueryDto> ordersV3() {
 
     return orderRepository.findAllWithMemberDelivery().stream()
-        .map(SimpleOrderDto::new)
+        .map(SimpleOrderQueryDto::new)
         .collect(Collectors.toList());
   }
 
-  static class SimpleOrderDto {
-    private final Long orderId;
-    private final String name;
-    private final LocalDateTime orderDate;
-    private final OrderStatus orderStatus;
-    private final Address address;
+  // == V4 == //
 
-    public SimpleOrderDto(Order order) {
-      this.orderId = order.getId();
-      this.name = order.getMember().getName();
-      this.orderDate = order.getOrderDate();
-      this.orderStatus = order.getStatus();
-      this.address = order.getDelivery().getAddress();
-    }
-
-    public Long getOrderId() {
-      return orderId;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public LocalDateTime getOrderDate() {
-      return orderDate;
-    }
-
-    public OrderStatus getOrderStatus() {
-      return orderStatus;
-    }
-
-    public Address getAddress() {
-      return address;
-    }
+  /**
+   * 주문 조회
+   *
+   * <p>* 개선점
+   *
+   * <pre>
+   *     - V3 보다, DB Query 의 select column 를 원하는 것만 넣어 가져오기 때문에, V3 보다 성능 최적화에 조금 더 이점이 있다.
+   * </pre>
+   *
+   * * 문제점
+   *
+   * <pre>
+   *     - 재사용할 수 없다. (entity -> dto 로 인한 로직이 repository 에 들어가 버리기 때문)
+   *        - repository 는 순수한 entity 로 반환하는 것이 맞음
+   *        - 별도 DTO 전용 repository 를 생성하여, 별도로 사용해야함 (통계, 대규모 트래픽이 발생하는 query, ... 등등)
+   *     - JPQL 이 지저분해질 수 있다.
+   * </pre>
+   *
+   * @return
+   */
+  @GetMapping(path = "api/v4/simple-orders")
+  public List<SimpleOrderQueryDto> ordersV4() {
+    return orderRepository.findOrderDtos();
   }
 }

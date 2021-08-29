@@ -10,6 +10,8 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+
+import jpabook.jpbshop.api.OrderSimpleApiController;
 import jpabook.jpbshop.domain.Order;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -114,6 +116,18 @@ public class OrderRepository {
     return em.createQuery(
             "select o from Order o " + "join fetch o.member m " + "join fetch o.delivery d",
             Order.class)
+        .getResultList();
+  }
+
+  public List<SimpleOrderQueryDto> findOrderDtos() {
+
+    // 기본 적으로 entity 가 아닌 DTO 는 반환되지 않는다.
+    // JPQL 에 DTO 생성자에 entity 를 바로 넘길 수 없다.(entity 의 식별자로 넘기기 때문에 DTO 는 식별자가 없어 애매한 상황이 되버림)
+    return em.createQuery(
+            "select new jpabook.jpbshop.repository.SimpleOrderQueryDto(o.id, o.member.name, o.orderDate, o.status, o.delivery.address) from Order o "
+                + "join o.member m "
+                + "join o.delivery d",
+            SimpleOrderQueryDto.class)
         .getResultList();
   }
 }
