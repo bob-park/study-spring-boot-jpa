@@ -29,6 +29,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     implementation('com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.7.1') // 성능 상 문제가 될 수 있기 때문에, 실 배포 시 테스트 해보고 할것
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-hibernate5
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.12.5'
 }
 
 test {
