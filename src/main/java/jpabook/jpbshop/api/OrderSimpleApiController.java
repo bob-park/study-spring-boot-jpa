@@ -1,13 +1,17 @@
 package jpabook.jpbshop.api;
 
+import jpabook.jpbshop.domain.Address;
 import jpabook.jpbshop.domain.Order;
+import jpabook.jpbshop.domain.OrderStatus;
 import jpabook.jpbshop.repository.OrderRepository;
 import jpabook.jpbshop.repository.OrderSearch;
 import jpabook.jpbshop.service.OrderService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Order
@@ -60,5 +64,65 @@ public class OrderSimpleApiController {
     return all;
   }
 
-  // == V2 ==//
+  // == V2 == //
+
+  /**
+   * 주문 조회
+   *
+   * <p>* 문제점
+   *
+   * <pre>
+   *     - V1 과 동일하게, Lazy Loading 으로 인한 DB Query 가 너무 많이 실행된다. (N + 1 문제)
+   * </pre>
+   *
+   * @return
+   */
+  @GetMapping(path = "api/v2/simple-orders")
+  public List<SimpleOrderDto> ordersV2() {
+
+    // N + 1 문제 발생
+    // Order 조회로 1번 (2 row) -> Member, Delivery 각각 Order 의 result row 개수 만큼 추가 - 총 1 + (2 + 2)번 실행
+    // Lazy 에서 Eager 로 변경하면, SQL Query 가 어떻게 실행될 지 예상되지 않음
+    return orderRepository.findAll(new OrderSearch()).stream()
+        .map(SimpleOrderDto::new)
+        .collect(Collectors.toList());
+  }
+
+  static class SimpleOrderDto {
+    private final Long orderId;
+    private final String name;
+    private final LocalDateTime orderDate;
+    private final OrderStatus orderStatus;
+    private final Address address;
+
+    public SimpleOrderDto(Order order) {
+      this.orderId = order.getId();
+      this.name = order.getMember().getName();
+      this.orderDate = order.getOrderDate();
+      this.orderStatus = order.getStatus();
+      this.address = order.getDelivery().getAddress();
+    }
+
+    public Long getOrderId() {
+      return orderId;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public LocalDateTime getOrderDate() {
+      return orderDate;
+    }
+
+    public OrderStatus getOrderStatus() {
+      return orderStatus;
+    }
+
+    public Address getAddress() {
+      return address;
+    }
+  }
+
+  // == V2 == //
 }
