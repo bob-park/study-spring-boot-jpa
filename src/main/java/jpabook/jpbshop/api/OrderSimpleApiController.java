@@ -88,6 +88,27 @@ public class OrderSimpleApiController {
         .collect(Collectors.toList());
   }
 
+  // == V3 == //
+
+  /**
+   * 주문 조회
+   *
+   * <p>* 개선점
+   *
+   * <pre>
+   *     - V1, V2 보다 DB Query 가 현저히 줄어든다. (fetch join - 1번 실행)
+   * </pre>
+   *
+   * @return
+   */
+  @GetMapping(path = "api/v3/simple-orders")
+  public List<SimpleOrderDto> ordersV3() {
+
+    return orderRepository.findAllWithMemberDelivery().stream()
+        .map(SimpleOrderDto::new)
+        .collect(Collectors.toList());
+  }
+
   static class SimpleOrderDto {
     private final Long orderId;
     private final String name;
@@ -123,6 +144,4 @@ public class OrderSimpleApiController {
       return address;
     }
   }
-
-  // == V2 == //
 }

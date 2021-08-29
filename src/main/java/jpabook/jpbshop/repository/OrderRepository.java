@@ -76,7 +76,7 @@ public class OrderRepository {
   /**
    * JPA Criteria
    *
-   * ! 코드를 보고 DB query 가 예상되지 않는다. - 사용 X
+   * <p>! 코드를 보고 DB query 가 예상되지 않는다. - 사용 X
    *
    * @param orderSearch
    * @return
@@ -108,6 +108,12 @@ public class OrderRepository {
     cq.where(cb.and(criteria.toArray(new Predicate[criteria.size()])));
 
     return em.createQuery(cq).setMaxResults(1_000).getResultList();
+  }
 
+  public List<Order> findAllWithMemberDelivery() {
+    return em.createQuery(
+            "select o from Order o " + "join fetch o.member m " + "join fetch o.delivery d",
+            Order.class)
+        .getResultList();
   }
 }
