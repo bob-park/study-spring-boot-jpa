@@ -143,6 +143,28 @@ public class OrderApiController {
 
   // == V5 == //
 
+  /**
+   * 주문 조회
+   *
+   * <p>개선한 점
+   *
+   * <pre>
+   *     - order item 을 가져올 때 ~ in 으로하여 한번에 order items 를 가져옴
+   * </pre>
+   *
+   * * 문제점
+   *
+   * <pre>
+   *     - 상당 부분이 코드를 직접 작성하여 처리하였다.
+   * </pre>
+   *
+   * @return
+   */
+  @GetMapping(path = "api/v5/orders")
+  public List<OrderQueryDto> orderV5() {
+    return orderQueryRepository.findAllBoyDtoOptimization();
+  }
+
   // == V6 == //
 
   private class OrderDto {
