@@ -16,10 +16,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
+/**
+ * * JPA open session in view (이하 OSIV) 옵션 default :true
+ *
+ * <p>? 실무에서는 OSIV 를 false 로 해야겠지?
+ *
+ * <p>! OSIV 가 false 로 설정할 경우 문제점
+ *
+ * <pre>
+ *     - Lazy Loading 을 Transaction 내에서만 상용할 수 있다.
+ *        - controller 나 view 단에서 지연로딩 안됨 (LazyInitializationException 터짐)
+ * </pre>
+ *
+ * * OSIV 가 false 일 때 지연로딩 사용법
+ *
+ * <pre>
+ *     - Controller 와 Persistence Context 사이에 Transaction 영역인 Service 에 모든 지연 로딩 로직을 담는다.
+ *     - Command 와 Query 를 분리한다.
+ *        - 핵심 비지니스 로직과 (View 나 API 에 맞춘 서비스)를 분리한다.(주로 읽기 전용 트랜잭션 사용)
+ * </pre>
+ *
+ * ! OSIV 가 true 이면 문제점
+ *
+ * <pre>
+ *     - DB Connection 이 Controller 응답을 줄때 까지 반환하지 않고 있기 때문에, 대규모 트래픽이 발생할 경우 DB Connection 부분에서 문제가 될 수 있다.
+ * </pre>
+ */
 @RestController
 public class OrderApiController {
 
