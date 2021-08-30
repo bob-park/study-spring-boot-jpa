@@ -6,6 +6,8 @@ import jpabook.jpbshop.domain.OrderItem;
 import jpabook.jpbshop.domain.OrderStatus;
 import jpabook.jpbshop.repository.OrderRepository;
 import jpabook.jpbshop.repository.OrderSearch;
+import jpabook.jpbshop.repository.order.query.OrderQueryDto;
+import jpabook.jpbshop.repository.order.query.OrderQueryRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +21,12 @@ public class OrderApiController {
 
   private final OrderRepository orderRepository;
 
-  public OrderApiController(OrderRepository orderRepository) {
+  private final OrderQueryRepository orderQueryRepository;
+
+  public OrderApiController(
+      OrderRepository orderRepository, OrderQueryRepository orderQueryRepository) {
     this.orderRepository = orderRepository;
+    this.orderQueryRepository = orderQueryRepository;
   }
 
   // == V1 == //
@@ -102,7 +108,7 @@ public class OrderApiController {
    *
    * <pre>
    *     - root entity 기준 ToOne 연관관계는 모두 fetch join 을 한다. (ToOne 관계는 row 를 늘리진 않기 때문에)
-   *     - Collection 은 Lazy loading 으로 조회한다.
+   *     - Collection 은 Lazy loading 으로 조회한다. (ToMany 관계 - loop 돌면서 가져온다.)
    *     - Lazy loading 조회시 성능 최적화를 위해 {hibernate.default_batch_fetch_size} 또는 @BatchSize 를 적용한다. (최대개수는 1000개) - 1000 추천
    *
    * </pre>
@@ -118,6 +124,22 @@ public class OrderApiController {
   }
 
   // == V4 == //
+
+  /**
+   * 주문 조회
+   *
+   * <p>* 문제점
+   *
+   * <pre>
+   *     - repository 에서 바로 DTO 컬렉션을 조회하지만, N + 1 번 DB Query 가 실행되는 문제가 발생한다.
+   * </pre>
+   *
+   * @return
+   */
+  @GetMapping(path = "api/v4/orders")
+  public List<OrderQueryDto> orderV4() {
+    return orderQueryRepository.findOrderQueryDtos();
+  }
 
   // == V5 == //
 
