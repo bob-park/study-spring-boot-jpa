@@ -1,28 +1,30 @@
 package jpabook.jpbshop.repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import jpabook.jpbshop.api.OrderSimpleApiController;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jpabook.jpbshop.domain.Order;
+import jpabook.jpbshop.domain.OrderStatus;
+import jpabook.jpbshop.domain.QMember;
+import jpabook.jpbshop.domain.QOrder;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class OrderRepository {
 
   private final EntityManager em;
 
+  private final JPAQueryFactory query;
+
   public OrderRepository(EntityManager em) {
     this.em = em;
+    this.query = new JPAQueryFactory(em);
   }
 
   public void save(Order order) {
@@ -33,7 +35,7 @@ public class OrderRepository {
     return em.find(Order.class, orderId);
   }
 
-  public List<Order> findAll(OrderSearch orderSearch) {
+  public List<Order> findAllOld(OrderSearch orderSearch) {
     String jpql = "select o from Order o join o.member m";
 
     boolean isFirstCondition = true;
@@ -154,5 +156,43 @@ public class OrderRepository {
                 + "join fetch io.item i", // OneToOne
             Order.class)
         .getResultList();
+  }
+
+  // == queryDSL == //
+  /*
+   * * queryDSL 를 하기 전 Q~ entity 파일이 생성되어 있어야 한다. (compile 하면 생김)
+   *
+   * * 실무에서는 되도록 QueryDSL 를 사용하자
+   */
+
+  public List<Order> findAll(OrderSearch orderSearch) {
+
+    QOrder order = QOrder.order;
+    QMember member = QMember.member;
+
+    return query
+        .select(order)
+        .from(order)
+        .join(order.member, member)
+        .where(statusEq(orderSearch.getOrderStatus()), nameLike(orderSearch.getMemberName()))
+        .limit(1000)
+        .fetch();
+  }
+
+  private BooleanExpression nameLike(String memberName) {
+
+    if (!StringUtils.hasText(memberName)) {
+      return null;
+    }
+
+    return QMember.member.name.like(memberName);
+  }
+
+  private BooleanExpression statusEq(OrderStatus statusCondition) {
+    if (statusCondition == null) {
+      return null;
+    }
+
+    return QOrder.order.status.eq(statusCondition);
   }
 }

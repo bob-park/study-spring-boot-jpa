@@ -1,3 +1,10 @@
+// QueryDSL 추가
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.5.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -32,11 +39,14 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-hibernate5
     implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-hibernate5', version: '2.12.5'
+
+    // QueryDSL 추가
+    implementation ("com.querydsl:querydsl-jpa:${queryDslVersion}")
+    annotationProcessor ("com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+    testImplementation ("com.querydsl:querydsl-jpa:${queryDslVersion}")
+    testAnnotationProcessor ("com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
 }
 
 test {
     useJUnitPlatform()
 }
-
-// 의존관계 트리 커맨드
-// {project root}/.gradlew dependencies
