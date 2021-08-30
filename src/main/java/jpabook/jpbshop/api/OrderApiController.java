@@ -70,6 +70,28 @@ public class OrderApiController {
 
   // == V3 == //
 
+  /**
+   * 주문 조회
+   *
+   * <p>* 문제점
+   *
+   * <pre>
+   *     - DB Query 가 실행되는 수는 현저히 적어졌으나, 결과가 실제 데이터 보다 더 많이 나온다. (distinct 로 하여 중복된 entity 를 제거할 수 있다.)
+   *        - 허나, 실제 DB Query 에 distinct 를 넣어주지만, 전체 컬럼에 대한 값이 모두 같아야 없어지므로, 원하는 대로 데이터가 나오지 않을 가능성이 높다.
+   *        - JPA 에서는 entity 의 식별자가 같을 경우 중복을 제거시켜준다.
+*        - 페이징 불가능 (가능은 하나, JPA 에서 DB Query (페이징 쿼리 없음) 결과를 메모리에 모두 올려서 페이징 처리해버린다. - 매우 위험)
+   *     - 1:N - Collection Fetch join 은 1개만 사용해야한다. (JPA 에서 한개밖에 사용 못함 - 경고 내보냄)
+   * </pre>
+   *
+   * @return
+   */
+  @GetMapping(path = "api/v3/orders")
+  public List<OrderDto> ordersV3() {
+    List<Order> orders = orderRepository.findAllWithItem();
+
+    return orders.stream().map(OrderDto::new).collect(Collectors.toList());
+  }
+
   // == V4 == //
 
   // == V5 == //
@@ -88,23 +110,23 @@ public class OrderApiController {
     public OrderDto(Order order) {
 
       this(
-              order.getId(),
-              order.getMember().getName(),
-              order.getOrderDate(),
-              order.getStatus(),
-              order.getDelivery().getAddress(),
-              order.getOrderItems().stream().map(OrderItemDto::new).collect(Collectors.toList()));
+          order.getId(),
+          order.getMember().getName(),
+          order.getOrderDate(),
+          order.getStatus(),
+          order.getDelivery().getAddress(),
+          order.getOrderItems().stream().map(OrderItemDto::new).collect(Collectors.toList()));
 
       order.getOrderItems().forEach(orderItem -> orderItem.getItem().getName());
     }
 
     public OrderDto(
-            Long orderId,
-            String name,
-            LocalDateTime orderDate,
-            OrderStatus orderStatus,
-            Address address,
-            List<OrderItemDto> orderItems) {
+        Long orderId,
+        String name,
+        LocalDateTime orderDate,
+        OrderStatus orderStatus,
+        Address address,
+        List<OrderItemDto> orderItems) {
       this.orderId = orderId;
       this.name = name;
       this.orderDate = orderDate;

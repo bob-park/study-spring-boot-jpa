@@ -130,4 +130,16 @@ public class OrderRepository {
             SimpleOrderQueryDto.class)
         .getResultList();
   }
+
+  public List<Order> findAllWithItem() {
+
+    return em.createQuery(
+            "select distinct o from Order o "
+                + "join fetch o.member m " // ManyToOne
+                + "join fetch o.delivery d " // OneToOne
+                + "join fetch o.orderItems io " // OneToMany - Collection
+                + "join fetch io.item i", // OneToOne
+            Order.class)
+        .getResultList();
+  }
 }
