@@ -20,8 +20,11 @@ public class OrderRepository {
 
   private final EntityManager em;
 
+  private final JPAQueryFactory query;
+
   public OrderRepository(EntityManager em) {
     this.em = em;
+    this.query = new JPAQueryFactory(em);
   }
 
   public void save(Order order) {
@@ -164,8 +167,6 @@ public class OrderRepository {
 
     QOrder order = QOrder.order;
     QMember member = QMember.member;
-
-    JPAQueryFactory query = new JPAQueryFactory(em);
 
     return query
         .select(order)
