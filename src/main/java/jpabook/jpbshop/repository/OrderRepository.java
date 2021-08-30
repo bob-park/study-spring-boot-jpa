@@ -160,7 +160,9 @@ public class OrderRepository {
 
   // == queryDSL == //
   /*
-   * * queryDSL 를 하기 전 Q~ entity 파일이 생성되어 있어야 한다.
+   * * queryDSL 를 하기 전 Q~ entity 파일이 생성되어 있어야 한다. (compile 하면 생김)
+   *
+   * * 실무에서는 되도록 QueryDSL 를 사용하자
    */
 
   public List<Order> findAll(OrderSearch orderSearch) {
