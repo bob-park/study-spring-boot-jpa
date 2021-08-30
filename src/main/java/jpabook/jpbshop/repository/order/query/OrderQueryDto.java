@@ -5,6 +5,7 @@ import jpabook.jpbshop.domain.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class OrderQueryDto {
 
@@ -22,11 +23,22 @@ public class OrderQueryDto {
       LocalDateTime orderDate,
       OrderStatus orderStatus,
       Address address) {
+    this(orderId, name, orderDate, orderStatus, address, null);
+  }
+
+  public OrderQueryDto(
+      Long orderId,
+      String name,
+      LocalDateTime orderDate,
+      OrderStatus orderStatus,
+      Address address,
+      List<OrderItemQueryDto> orderItems) {
     this.orderId = orderId;
     this.name = name;
     this.orderDate = orderDate;
     this.orderStatus = orderStatus;
     this.address = address;
+    this.orderItems = orderItems;
   }
 
   public Long getOrderId() {
@@ -55,5 +67,18 @@ public class OrderQueryDto {
 
   public void setOrderItems(List<OrderItemQueryDto> orderItems) {
     this.orderItems = orderItems;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    OrderQueryDto that = (OrderQueryDto) o;
+    return Objects.equals(getOrderId(), that.getOrderId());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(getOrderId());
   }
 }

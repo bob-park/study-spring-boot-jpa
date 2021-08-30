@@ -44,7 +44,7 @@ public class OrderQueryRepository {
         .getResultList();
   }
 
-  public List<OrderQueryDto> findAllBoyDtoOptimization() {
+  public List<OrderQueryDto> findAllByDtoOptimization() {
 
     List<OrderQueryDto> orders = findOrders();
 
@@ -70,5 +70,17 @@ public class OrderQueryRepository {
             .getResultList();
 
     return orderItems.stream().collect(Collectors.groupingBy(OrderItemQueryDto::getOrderId));
+  }
+
+  public List<OrderFlatDto> findAllByDtoFlat() {
+
+    return em.createQuery(
+            "select new jpabook.jpbshop.repository.order.query.OrderFlatDto(o.id, m.name, o.orderDate, o.status, d.address, i.name, oi.orderPrice, oi.count) from Order o "
+                + "join o.member m "
+                + "join o.delivery d "
+                + "join o.orderItems oi "
+                + "join oi.item i",
+            OrderFlatDto.class)
+        .getResultList();
   }
 }
