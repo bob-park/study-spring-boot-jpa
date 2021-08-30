@@ -51,7 +51,9 @@ public class MemberService {
    * @return
    */
   public Member find(Long memberId) {
-    return memberRepository.find(memberId);
+    return memberRepository
+        .findById(memberId)
+        .orElseThrow(() -> new IllegalStateException("없는 Member Id 이닷."));
   }
 
   /**
@@ -79,7 +81,10 @@ public class MemberService {
   @Transactional
   public void update(Long id, String name) {
 
-    Member member = memberRepository.find(id);
+    Member member =
+        memberRepository
+            .findById(id)
+            .orElseThrow(() -> new IllegalStateException("없는 Member Id 이닷."));
 
     member.setName(name);
   }

@@ -1,46 +1,31 @@
 package jpabook.jpbshop.repository;
 
 import jpabook.jpbshop.domain.Member;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
-@Repository
-public class MemberRepository {
-
-  private final EntityManager em;
-
-  // * spring boot data jpa 가 entity manager 를 초기화 해준다.
-  public MemberRepository(EntityManager em) {
-    this.em = em;
-  }
-
-  public void save(Member member) {
-    em.persist(member);
-  }
-
-  public Member find(Long id) {
-
-    return em.find(Member.class, id);
-  }
-
-  /**
-   * 전체 결과를 반환해주는 메소드
-   *
-   * <pre>
-   * !List 로 반환해야할 경우 JPQL 로 해야한다.
-   * </pre>
-   *
-   * @return {@link List}
-   */
-  public List<Member> findAll() {
-    return em.createQuery("select m from Member m", Member.class).getResultList();
-  }
-
-  public List<Member> findByName(String name) {
-    return em.createQuery("select m from Member m where m.name = :name", Member.class)
-        .setParameter("name", name)
-        .getResultList();
-  }
+/**
+ *
+ * * Spring Data JPA 에서 기본적으로 CRUD 가 내장되어 있다.
+ *
+ * * Spring Data JPA 장점
+ *
+ * <pre>
+ *     - 구현체의 Method 의 signature 를 보고 DB 조회 Query 를 생성해버린다.
+ *     - 개발자는 구현체만 생성하면됨
+ * </pre>
+ *
+ *
+ * ! Spring DATA JPA 주의점
+ *
+ * <pre>
+ *     - Spring Data JPA 는 JPA 를 단지 구현한 것 뿐
+ *     - JPA 를 정확히 알고 써야됨 (장애나 이슈 발생 시 어려움이 있음)
+ * </pre>
+ *
+ *
+ */
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    List<Member> findByName(String name);
 }
