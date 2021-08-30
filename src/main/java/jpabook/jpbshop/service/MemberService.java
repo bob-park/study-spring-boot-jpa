@@ -30,7 +30,7 @@ public class MemberService {
 
     validateDuplicateMember(member);
 
-    memberRepositoryOld.save(member);
+    memberRepository.save(member);
 
     return member.getId();
   }
