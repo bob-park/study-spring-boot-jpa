@@ -114,8 +114,21 @@ public class OrderRepository {
 
   public List<Order> findAllWithMemberDelivery() {
     return em.createQuery(
-            "select o from Order o " + "join fetch o.member m " + "join fetch o.delivery d",
+            "select o from Order o "
+                + "join fetch o.member m " // ManyToOne
+                + "join fetch o.delivery d", // OneToOne
             Order.class)
+        .getResultList();
+  }
+
+  public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+    return em.createQuery(
+            "select o from Order o "
+                + "join fetch o.member m " // ManyToOne
+                + "join fetch o.delivery d", // OneToOne
+            Order.class)
+        .setFirstResult(offset)
+        .setMaxResults(limit)
         .getResultList();
   }
 
@@ -128,6 +141,18 @@ public class OrderRepository {
                 + "join o.member m "
                 + "join o.delivery d",
             SimpleOrderQueryDto.class)
+        .getResultList();
+  }
+
+  public List<Order> findAllWithItem() {
+
+    return em.createQuery(
+            "select distinct o from Order o "
+                + "join fetch o.member m " // ManyToOne
+                + "join fetch o.delivery d " // OneToOne
+                + "join fetch o.orderItems io " // OneToMany - Collection
+                + "join fetch io.item i", // OneToOne
+            Order.class)
         .getResultList();
   }
 }
