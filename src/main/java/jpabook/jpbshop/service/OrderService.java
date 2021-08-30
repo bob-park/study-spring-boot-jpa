@@ -7,7 +7,7 @@ import jpabook.jpbshop.domain.Order;
 import jpabook.jpbshop.domain.OrderItem;
 import jpabook.jpbshop.domain.item.Item;
 import jpabook.jpbshop.repository.ItemRepository;
-import jpabook.jpbshop.repository.MemberRepository;
+import jpabook.jpbshop.repository.MemberRepositoryOld;
 import jpabook.jpbshop.repository.OrderRepository;
 import jpabook.jpbshop.repository.OrderSearch;
 import org.springframework.stereotype.Service;
@@ -18,15 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
   private final OrderRepository orderRepository;
-  private final MemberRepository memberRepository;
+  private final MemberRepositoryOld memberRepositoryOld;
   private final ItemRepository itemRepository;
 
   public OrderService(
       OrderRepository orderRepository,
-      MemberRepository memberRepository,
+      MemberRepositoryOld memberRepositoryOld,
       ItemRepository itemRepository) {
     this.orderRepository = orderRepository;
-    this.memberRepository = memberRepository;
+    this.memberRepositoryOld = memberRepositoryOld;
     this.itemRepository = itemRepository;
   }
 
@@ -42,7 +42,7 @@ public class OrderService {
   public Long order(Long memberId, Long itemId, int count) {
 
     // 엔티티 조회
-    Member member = memberRepository.find(memberId);
+    Member member = memberRepositoryOld.find(memberId);
     Item item = itemRepository.find(itemId);
 
     // 배송정보 생성
